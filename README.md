@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/static/v1?label=Python&message=3.10%2B&color=3776AB&style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![Login](https://img.shields.io/static/v1?label=Login&message=Playwright%20QR&color=2EAD33&style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![Platform](https://img.shields.io/static/v1?label=Platform&message=Windows&color=0078D6&style=flat-square&logo=windows11&logoColor=white)](#quick-start)
+[![License](https://img.shields.io/static/v1?label=License&message=GPL-3.0&color=2563EB&style=flat-square)](LICENSE)
 [![HTTP](https://img.shields.io/static/v1?label=HTTP&message=requests&color=2CA5E0&style=flat-square)](#how-it-works)
 
 Battle-tested automation for the Tencent Cloud Lighthouse (轻量应用服务器) ¥38/year flash sale — browser-free ordering with a computed `g_tk` CSRF token, auto-resolved daily session ID, face-check preflight, and a jittered round-based firing strategy.
@@ -99,4 +100,6 @@ Windows users can also double-click `早上抢购.bat` (self-check + launch in o
 
 ## License
 
-No open-source license is provided — study and personal use only. The base script remains credited to its original author.
+This project is licensed under the [GNU General Public License v3.0](LICENSE) — Copyright (C) 2026 Cec1c.
+
+The base script is derived from [Allenalonel/tencentyun-seckill](https://github.com/Allenalonel/tencentyun-seckill), which declares no license; copyright of that portion remains with its original author and is included here with credit.

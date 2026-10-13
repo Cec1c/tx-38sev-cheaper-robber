@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/static/v1?label=Python&message=3.10%2B&color=3776AB&style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![登录方式](https://img.shields.io/static/v1?label=%E7%99%BB%E5%BD%95%E6%96%B9%E5%BC%8F&message=Playwright%20%E6%89%AB%E7%A0%81&color=2EAD33&style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![平台](https://img.shields.io/static/v1?label=%E5%B9%B3%E5%8F%B0&message=Windows&color=0078D6&style=flat-square&logo=windows11&logoColor=white)](#快速开始)
+[![许可证](https://img.shields.io/static/v1?label=%E8%AE%B8%E5%8F%AF%E8%AF%81&message=GPL-3.0&color=2563EB&style=flat-square)](LICENSE)
 [![HTTP](https://img.shields.io/static/v1?label=HTTP&message=requests&color=2CA5E0&style=flat-square)](#工作原理)
 
 腾讯云轻量应用服务器（38 元/年）秒杀活动自动抢购 —— 实战验证：免浏览器下单（g_tk 计算 CSRF）、场次 ID 自动获取、人脸/资格预检、带抖动的轮次开抢策略。
@@ -99,4 +100,6 @@ Windows 下也可直接双击 `早上抢购.bat`（自检 + 启动一步完成�
 
 ## 许可
 
-未提供开源许可证 —— 仅供学习与个人使用；基础脚本版权归原作者，此处署名转载。
+本项目基于 [GNU General Public License v3.0](LICENSE) 发布 —— Copyright (C) 2026 Cec1c。
+
+基础脚本派生自 [Allenalonel/tencentyun-seckill](https://github.com/Allenalonel/tencentyun-seckill)（原仓库未声明许可证），该部分版权归原作者所有，此处署名收录。
