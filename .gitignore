@@ -1,0 +1,8 @@
+# 本地产物（勿提交）
+cookies.json
+config.json
+logs/
+*.log
+__pycache__/
+venv/
+.venv/
