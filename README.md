@@ -6,6 +6,8 @@
 [![Login](https://img.shields.io/static/v1?label=Login&message=Playwright%20QR&color=2EAD33&style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![Platform](https://img.shields.io/static/v1?label=Platform&message=Windows&color=0078D6&style=flat-square&logo=windows11&logoColor=white)](#quick-start)
 [![License](https://img.shields.io/static/v1?label=License&message=GPL-3.0&color=2563EB&style=flat-square)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/Cec1c/tx-38sev-cheaper-robber?style=flat-square&label=stars)](https://github.com/Cec1c/tx-38sev-cheaper-robber/stargazers)
+[![Last commit](https://img.shields.io/github/last-commit/Cec1c/tx-38sev-cheaper-robber?style=flat-square)](https://github.com/Cec1c/tx-38sev-cheaper-robber/commits)
 [![HTTP](https://img.shields.io/static/v1?label=HTTP&message=requests&color=2CA5E0&style=flat-square)](#how-it-works)
 
 Battle-tested automation for the Tencent Cloud Lighthouse (轻量应用服务器) ¥38/year flash sale — browser-free ordering with a computed `g_tk` CSRF token, auto-resolved daily session ID, face-check preflight, and a jittered round-based firing strategy.
