@@ -10,7 +10,7 @@
 [![最新提交](https://img.shields.io/github/last-commit/Cec1c/tx-38sev-cheaper-robber?style=flat-square&label=%E6%9C%80%E6%96%B0%E6%8F%90%E4%BA%A4)](https://github.com/Cec1c/tx-38sev-cheaper-robber/commits)
 [![HTTP](https://img.shields.io/static/v1?label=HTTP&message=requests&color=2CA5E0&style=flat-square)](#工作原理)
 
-腾讯云轻量应用服务器（38 元/年）秒杀活动自动抢购 —— 实战验证：免浏览器下单（g_tk 计算 CSRF）、场次 ID 自动获取、人脸/资格预检、带抖动的轮次开抢策略。
+为腾讯云轻量应用服务器 38 元/年活动准备登录态、核对购买资格，并定时提交订单。工具自动匹配当日场次 ID，按设定时间开始请求。
 
 [English](README.md) ｜ [快速开始](#快速开始) ｜ [文档](#文档) ｜ [致谢](#致谢)
 
@@ -19,18 +19,50 @@
 > [!IMPORTANT]
 > 活动限**新用户**参与（同一实名限购 1 台），且可能要求**人脸核身**。每场开抢前先运行 `morning_check.py`：检查登录态、人脸核身、购买资格与当日场次 ID。若存在未支付订单（1101411），在付款或取消之前重试全部无效。
 
-> [!NOTE]
-> 仅供个人学习研究。自动化抢购可能违反活动规则，风险自担。基础脚本、错误码手册与实战笔记来自 [Allenalonel/tencentyun-seckill](https://github.com/Allenalonel/tencentyun-seckill)。
-
 ## 能做什么
 
 - **扫码登录**：`get_cookies.py` 弹出浏览器扫码，保存登录态到 `cookies.json`，并自动检查人脸核身状态（未通过会引导完成）
-- **免浏览器下单**：`x-csrf-token` 由 `skey` cookie 经 g_tk（djb2）算法计算，开抢阶段纯 `requests`，不依赖页面与浏览器
+- **HTTP 下单**：浏览器完成登录后，用 `requests` 提交订单，`x-csrf-token` 由 `skey` cookie 经 g_tk（djb2）算法计算
 - **场次 ID 自动获取**：下单负载里的 `business.id` 就是当日场次 ID，启动时自动从 `query-seckill-by-date` 按开售时间精确匹配
 - **开抢前预检**：登录态、人脸核身、购买资格、库存配额全部提前核对
 - **轮次开抢**：提前 1.5 秒起打；每轮 3 地域并发；轮间 350~600ms 抖动；遇 408 退避 1.5s；重试窗口 30 秒；单请求超时 3 秒
-- **未支付订单识别**：收到 `1101411` 立即停止重试并自动打开付款页（未付单占着限购配额，重试无意义）
+- **未支付订单识别**：收到 `1101411` 后停止重试并打开付款页，供你支付或取消已有订单
 - **一天两场**：`launch_today.py` 自动挂起 10:00 与 15:00 两场后台监听，日志分别写入 `run_1000.log` / `run_1500.log`
+
+## 快速开始
+
+前提：Windows、Python 3.10+，安装依赖：
+
+```bat
+pip install requests playwright
+python -m playwright install chromium
+```
+
+1. 获取登录态。`morning_check.py` 报 `NOT-LOGINED` 时重新执行：
+
+```bat
+python get_cookies.py
+```
+
+用微信扫码，脚本会保存 `cookies.json` 并检查人脸核身。
+
+2. 开抢前自检：
+
+```bat
+python morning_check.py
+```
+
+确认登录态、人脸核身、购买资格、今日场次 ID 四项检查均通过，再启动监听。
+
+3. 启动今日 10:00 和 15:00 两场监听；单场运行时，将示例日期替换为实际开售时间：
+
+```bat
+python launch_today.py
+:: 单场指定时间
+python snap_up_server.py "2026-01-01 10:00:00"
+```
+
+Windows 下也可直接双击 `早上抢购.bat`（自检 + 启动一步完成）。
 
 ## 工作原理
 
@@ -50,41 +82,6 @@
 | `ROUND_GAP_S` + `ROUND_JITTER_S` | 0.35 + 0~0.25 | 轮间间隔与抖动 |
 | `BUY_TIMEOUT_S` | 3 | 单请求超时（快速失败） |
 | `SYNC_AHEAD_S` | 60 | 钟差校准提前量 |
-
-## 快速开始
-
-前提：Windows、Python 3.10+，安装依赖：
-
-```bat
-pip install requests playwright
-python -m playwright install chromium
-```
-
-1. 登录（有效期数天；`morning_check.py` 报 `NOT-LOGINED` 时重跑）：
-
-```bat
-python get_cookies.py
-```
-
-用微信扫码，脚本会保存 `cookies.json` 并检查人脸核身。
-
-2. 开抢前自检：
-
-```bat
-python morning_check.py
-```
-
-预期：四行 ✅（登录态、人脸核身、购买资格、今日场次 ID）。
-
-3. 拉起今日两场监听（或单场运行）：
-
-```bat
-python launch_today.py
-:: 单场指定时间
-python snap_up_server.py "2026-01-01 10:00:00"
-```
-
-Windows 下也可直接双击 `早上抢购.bat`（自检 + 启动一步完成）。
 
 ## 文档
 

@@ -10,7 +10,7 @@
 [![Last commit](https://img.shields.io/github/last-commit/Cec1c/tx-38sev-cheaper-robber?style=flat-square)](https://github.com/Cec1c/tx-38sev-cheaper-robber/commits)
 [![HTTP](https://img.shields.io/static/v1?label=HTTP&message=requests&color=2CA5E0&style=flat-square)](#how-it-works)
 
-Battle-tested automation for the Tencent Cloud Lighthouse (轻量应用服务器) ¥38/year flash sale — browser-free ordering with a computed `g_tk` CSRF token, auto-resolved daily session ID, face-check preflight, and a jittered round-based firing strategy.
+Prepare your Tencent Cloud login, check eligibility, and schedule order attempts for the Lighthouse ¥38/year flash sale. The tool resolves the day's session ID and submits requests at the configured time.
 
 [简体中文](README.zh-CN.md) ｜ [Quick Start](#quick-start) ｜ [Docs](#docs) ｜ [Credits](#credits)
 
@@ -19,18 +19,50 @@ Battle-tested automation for the Tencent Cloud Lighthouse (轻量应用服务器
 > [!IMPORTANT]
 > The activity is **new-user only** (one purchase per real-name identity) and may require **face verification**. Run `morning_check.py` before each session — it validates login, face check, purchase eligibility and the day's session ID. An unpaid order blocks all further attempts until it is paid or cancelled.
 
-> [!NOTE]
-> For personal study only. Automating purchases may violate the activity's terms; use at your own risk. The base script, error-code manual and battle notes come from [Allenalonel/tencentyun-seckill](https://github.com/Allenalonel/tencentyun-seckill).
-
 ## What It Does
 
 - **QR login capture** — `get_cookies.py` opens a browser, saves the login state to `cookies.json`, and checks face-verification status, guiding you through verification if needed.
-- **Browser-free ordering** — `x-csrf-token` is derived from the `skey` cookie via the g_tk (djb2) algorithm, so firing needs no browser, no page load and no token scraping.
+- **HTTP ordering** — after browser login, order requests use `requests` and derive `x-csrf-token` from the `skey` cookie with g_tk (djb2).
 - **Auto-resolved session ID** — the `business.id` in the order payload equals the day's session ID; it is fetched automatically from `query-seckill-by-date` by matching the target start time.
 - **Preflight checks** — login state, face check, purchase eligibility and stock quota are verified before the sale.
 - **Round-based firing** — starts 1.5 s early, then one round (3 regions concurrently) every 350–600 ms with jitter; backs off 1.5 s on `408`; 30 s retry window; 3 s per-request timeout.
-- **Unpaid-order detection** — on `1101411` it stops retrying and opens the payment page (retrying is pointless while an unpaid order holds the quota).
+- **Unpaid-order detection** — on `1101411`, it stops retrying and opens the payment page so you can pay or cancel the existing order.
 - **Two sessions a day** — `launch_today.py` starts background listeners for both the 10:00 and 15:00 windows, logging to `run_1000.log` / `run_1500.log`.
+
+## Quick Start
+
+Prerequisites: Windows, Python 3.10+, and dependencies:
+
+```bat
+pip install requests playwright
+python -m playwright install chromium
+```
+
+1. Capture your login. Repeat this step when `morning_check.py` reports `NOT-LOGINED`:
+
+```bat
+python get_cookies.py
+```
+
+Scan the QR code with WeChat; the script saves `cookies.json` and verifies face check.
+
+2. Self-check before the sale:
+
+```bat
+python morning_check.py
+```
+
+Continue when all four checks pass: login, face verification, purchase eligibility, and today's session ID.
+
+3. Schedule today's 10:00 and 15:00 sessions, or replace the example date below to run one session:
+
+```bat
+python launch_today.py
+:: single session at an explicit time
+python snap_up_server.py "2026-01-01 10:00:00"
+```
+
+Windows users can also double-click `早上抢购.bat` (self-check + launch in one step).
 
 ## How It Works
 
@@ -50,41 +82,6 @@ Key parameters (editable in `CONFIG` / `config.json`):
 | `ROUND_GAP_S` + `ROUND_JITTER_S` | 0.35 + 0~0.25 | Pacing between rounds |
 | `BUY_TIMEOUT_S` | 3 | Per-request timeout (fail fast) |
 | `SYNC_AHEAD_S` | 60 | Clock re-sync lead time |
-
-## Quick Start
-
-Prerequisites: Windows, Python 3.10+, and dependencies:
-
-```bat
-pip install requests playwright
-python -m playwright install chromium
-```
-
-1. Log in (valid for days, repeat when `morning_check.py` reports `NOT-LOGINED`):
-
-```bat
-python get_cookies.py
-```
-
-Scan the QR code with WeChat; the script saves `cookies.json` and verifies face check.
-
-2. Self-check before the sale:
-
-```bat
-python morning_check.py
-```
-
-Expected: four ✅ lines (login, face check, eligibility, today's session ID).
-
-3. Start today's listeners (or run a single session):
-
-```bat
-python launch_today.py
-:: single session at an explicit time
-python snap_up_server.py "2026-01-01 10:00:00"
-```
-
-Windows users can also double-click `早上抢购.bat` (self-check + launch in one step).
 
 ## Docs
 
